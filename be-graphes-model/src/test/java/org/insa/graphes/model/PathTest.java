@@ -121,7 +121,6 @@ public class PathTest {
         assertFalse(invalidPath.isValid());
     }
 
-    @Test
     public void testGetLength() {
         assertEquals(0, emptyPath.getLength(), 1e-6);
         assertEquals(0, singleNodePath.getLength(), 1e-6);
