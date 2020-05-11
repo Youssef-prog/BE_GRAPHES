@@ -30,12 +30,50 @@ public class Path {
      * @throws IllegalArgumentException If the list of nodes is not valid, i.e. two
      *         consecutive nodes in the list are not connected in the graph.
      * 
-     * @deprecated Need to be implemented.
+     * deprecated Need to be implemented.
      */
-    public static Path createFastestPathFromNodes(Graph graph, List<Node> nodes)
+	public static Path createFastestPathFromNodes(Graph graph, List<Node> nodes)
             throws IllegalArgumentException {
+
+        if (nodes.size() == 1) {						//Condition pour savoir si 
+        												//la taille du chemin est 
+        	return new Path(graph, nodes.get(0));		//égale à 1
+        	
+        }
+            
+
         List<Arc> arcs = new ArrayList<Arc>();
-        
+
+        for (int i = 0; i < nodes.size()-1; i++) {	//Parcours des arcs du chemin
+
+            Node Node = nodes.get(i);
+            Node neighborNode = nodes.get(i + 1);
+            
+            Arc fastArc = null;
+
+            double minTravelTime = Double.MAX_VALUE;
+            
+
+            for (Arc y : Node.getSuccessors()) {	//Parcours des successeurs
+            	
+                if (y.getDestination() != neighborNode) {
+                	
+                	continue;
+                }
+
+                double travelTime = y.getMinimumTravelTime();
+                if (travelTime < minTravelTime) {
+                    minTravelTime = travelTime;
+                    fastArc = y;
+                }
+            }
+
+            if (fastArc == null) throw new IllegalArgumentException(); //Exception à lever
+
+            arcs.add(fastArc); //J'ajoute les différents arcs qui formeront le chemin 
+            					//le plus rapide.
+        }
+
         return new Path(graph, arcs);
     }
 
@@ -51,14 +89,48 @@ public class Path {
      * @throws IllegalArgumentException If the list of nodes is not valid, i.e. two
      *         consecutive nodes in the list are not connected in the graph.
      * 
-     * @deprecated Need to be implemented.
+     * deprecated Need to be implemented.
      */
     public static Path createShortestPathFromNodes(Graph graph, List<Node> nodes)
             throws IllegalArgumentException {
+
+        if (nodes.size() == 1)
+            return new Path(graph, nodes.get(0));
+
         List<Arc> arcs = new ArrayList<Arc>();
-        // TODO:
-        return new Path(graph, arcs);
+        
+        for(int i = 0; i < nodes.size() - 1; i++) {
+        	
+        	Node Node = nodes.get(i);
+        	Node neighborNode = nodes.get(i+1);
+        	
+        	double minLength = Double.MAX_VALUE;
+        	
+        	Arc arcMin = null;
+        	
+        	for(Arc y : Node.getSuccessors()) {
+        		
+        		if(y.getDestination() != neighborNode) continue;
+        		
+        		double length = y.getLength();
+        		
+        		if(length < minLength) {
+        			minLength = length;
+        			arcMin = y;
+        		}
+        	}
+        	
+        	if(arcMin == null) throw new IllegalArgumentException();
+        	
+        	arcs.add(arcMin);
+        	
+        	
+        }
+
+        return new Path(graph, arcs);//J'ajoute les différents arcs qui formeront le chemin 
+									//le plus court.
     }
+
 
     /**
      * Concatenate the given paths.
@@ -201,18 +273,41 @@ public class Path {
      * deprecated Need to be implemented.
      */
     public boolean isValid() {
+    	
     	if(isEmpty()) {
+    		
     		return true;
     	}
+    	
     	
     	else if(size()==1) {
     		
     		return true;
     	}
-        
-        else if() {
+    	
+    	//for(i=1; i<this.getArcs().size(); i++)
+    	else{
+    		
+    		int i=1;
+        	while(i<this.getArcs().size()) {
+        		
+        		if(this.getArcs().get(i).getOrigin().compareTo(this.getArcs().get(i-1).getDestination())!=0){
+        				
+        			return false;
+        		}
+        			
+        		else {
+        				
+        			i=i+1;
+        		}
+           		
+        	}
         	
+        	return true;
     	}
+    	//if(this.getArcs().get(0).getOrigin().compareTo(origin)==0){
+
+
     }
 
     /**
