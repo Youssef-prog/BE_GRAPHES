@@ -1,6 +1,10 @@
 package org.insa.graphs.algorithm.utils;
 
+
+import javax.xml.bind.SchemaOutputResolver;
+
 import java.util.ArrayList;
+
 
 /**
  * Implements a binary heap containing elements of type E.
@@ -138,6 +142,35 @@ public class BinaryHeap<E extends Comparable<E>> implements PriorityQueue<E> {
     @Override
     public void remove(E x) throws ElementNotFoundException {
         // TODO:
+    	
+        int index = this.array.indexOf(x);
+
+        if (index == -1) {
+        	
+        	throw new ElementNotFoundException(x);
+        	
+        }
+        
+        if (index >= currentSize) {
+        	
+        	throw new ElementNotFoundException(x);
+        	
+        }
+        
+        
+        E r = this.array.get(--this.currentSize); //dernier élément du tas pour l'échange
+        
+        arraySet(index,  r);
+        
+        percolateUp(index); // Déplace le nœud vers le haut à la 
+			// position appropriée dans le tas.
+        
+        percolateDown(index); // Déplace le nœud vers le bas à la 
+        					  // position appropriée dans le tas.
+        
+
+        
+        
     }
 
     @Override
