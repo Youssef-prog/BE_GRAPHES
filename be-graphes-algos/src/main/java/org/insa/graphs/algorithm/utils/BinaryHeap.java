@@ -1,7 +1,7 @@
 package org.insa.graphs.algorithm.utils;
 
 
-import javax.xml.bind.SchemaOutputResolver;
+//import javax.xml.bind.SchemaOutputResolver;
 
 import java.util.ArrayList;
 
@@ -163,7 +163,7 @@ public class BinaryHeap<E extends Comparable<E>> implements PriorityQueue<E> {
         arraySet(index,  r);
         
         percolateUp(index); // Déplace le nœud vers le haut à la 
-			// position appropriée dans le tas.
+							// position appropriée dans le tas.
         
         percolateDown(index); // Déplace le nœud vers le bas à la 
         					  // position appropriée dans le tas.
