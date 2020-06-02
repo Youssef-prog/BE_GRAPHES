@@ -4,9 +4,10 @@ import org.insa.graphs.algorithm.AbstractSolution.Status;
 import org.insa.graphs.algorithm.shortestpath.Label;
 import org.insa.graphs.model.Node;
 import org.insa.graphs.model.Arc;
-import org.insa.graphs.model.Path;
+import org.insa.graphs.model.*;
 
 import java.util.ArrayList;
+//import java.util.Arrays;
 import java.util.Collections;
 
 import org.insa.graphs.model.Graph;
@@ -24,8 +25,8 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 		protected Label[] initLabels() {
 			
 	        final ShortestPathData data = getInputData();
+			Graph graph = data.getGraph();
 			
-	        Graph graph = data.getGraph();
 			final int nbNodes = graph.size();
 			Label[] labels = new Label[nbNodes];
 			Node nodeorigin =data.getOrigin();
@@ -43,14 +44,17 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
     @Override
     protected ShortestPathSolution doRun() {
         final ShortestPathData data = getInputData();
+     
         ShortestPathSolution solution = null;
         // TODO:
       // Initialisation
         
+        
         Node nodedest = data.getDestination();
-        Graph graph = data.getGraph();             
-        ArrayList<Node> nodesFinal = new ArrayList<Node>(); // Création de la liste qui contiendra les nodes du chemin final trouvé
-        Node nodeorigin =data.getOrigin();
+        Graph graph = data.getGraph();     
+        final int nbNodes = graph.size();
+        Arc[] nodesFinal = new Arc[nbNodes]; // Création de la liste qui contiendra les nodes du chemin final trouvé Arc[] predecessorArcs = new Arc[nbNodes];
+        //Node nodeorigin =data.getOrigin();
         
         
         // Initialisation de la liste de label
@@ -103,27 +107,19 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         					
         					labelList[xsuiv].setCost(costxmin + data.getCost(y));
         					
+        					labelList[xsuiv].setFather(xmin.getNode());
+        					
         					if(labelList[xsuiv].getMarked() == true){
         						
         	                       tas.remove(labelList[xsuiv]);
+        	                       tas.insert(labelList[xsuiv]);
         	                    } 
         					
         					else {
+        							
         							tas.insert(labelList[xsuiv]);
-        	                    	
-        	                    }
-        					
-        					notifyNodeReached(y.getDestination());
-        					
-        					
-        					
-        					
-        					//labelList[xsuiv].setFather(xmin.getNode());	
-        					
-        						
-        					
-        					
-        					
+        							notifyNodeReached(y.getDestination());
+        	                    }	
         					
         				}
         				
@@ -138,58 +134,44 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         	
         	// Condition d'arrêt de l'algorithme
         	
-        	if (xmin.getNode().compareTo(nodedest)==0) //L'algorithme est stoppé si le dernier node visité est égale à la destination.
-        	{
+        //	if (xmin.getNode().compareTo(nodedest)==0) //L'algorithme est stoppé si le dernier node visité est égale à la destination.
+        //	{
         		
-        		break;
-        	}
+        //		break;
+        //	}
         	
         	
         	
         }
         
-        // Représentation du chemin
-        
-        int currentNode =nodedest.getId();
-        
-        while(labelList[currentNode].getFather()!=null){
- 
-        			nodesFinal.add(labelList[currentNode].getNode());
-        			currentNode=labelList[currentNode].getFather().getId();
-        	
-        }
-        
-        if (labelList[currentNode].getNode().equals(data.getOrigin()) == false){
+        if(nodesFinal[data.getDestination().getId()]== null) {
         	
         	solution = new ShortestPathSolution(data, Status.INFEASIBLE);
-        	
-        	return solution;
-        }
-        
-        notifyDestinationReached(data.getDestination());
-        
-        
-        nodesFinal.add(nodeorigin); // A
-        
-        Collections.reverse(nodesFinal); // Liste inversée
-        
-        
-        
-        
-        if (data.getMode().name()=="TIME") { //Choix du mode
-        	
-        	
-        	
-        	solution = new ShortestPathSolution(data, Status.OPTIMAL, Path.createFastestPathFromNodes(graph,nodesFinal));
         }
         
         else {
-        	
-        	solution = new ShortestPathSolution(data, Status.OPTIMAL, Path.createShortestPathFromNodes(graph,nodesFinal));
-        	
-        }	
+
+			notifyDestinationReached(data.getDestination());
+			
+	        // Représentation du chemin
+	        
+			ArrayList<Arc> arcs = new ArrayList<>();
+            Arc arc = nodesFinal[data.getDestination().getId()];
+            while (arc != null) {
+                arcs.add(arc);
+                arc = nodesFinal[arc.getOrigin().getId()];
+            }
+
+            // Reverse the path...
+            Collections.reverse(arcs);
+			
+
+			// Create the final solution.
+			solution = new ShortestPathSolution(data, Status.OPTIMAL, new Path(graph, arcs));
+		}
         
-        return solution;
+
+		return solution;
         
     }
 

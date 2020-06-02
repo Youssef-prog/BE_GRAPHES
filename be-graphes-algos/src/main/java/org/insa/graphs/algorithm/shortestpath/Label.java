@@ -47,8 +47,8 @@ public class Label implements Comparable<Label>{
         return father;
     }
     
-    public Node setFather(Node node) {
-    	return father;
+    public void setFather(Node father) {
+    	this.father = father ;
     }
 
 }
