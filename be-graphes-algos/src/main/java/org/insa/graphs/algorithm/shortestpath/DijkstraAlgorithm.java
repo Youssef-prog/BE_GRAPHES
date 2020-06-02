@@ -52,8 +52,8 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         
         Node nodedest = data.getDestination();
         Graph graph = data.getGraph();     
-        final int nbNodes = graph.size();
-        Arc[] nodesFinal = new Arc[nbNodes]; // Création de la liste qui contiendra les nodes du chemin final trouvé Arc[] predecessorArcs = new Arc[nbNodes];
+        //final int nbNodes = graph.size();
+        //Arc[] nodesFinal = new Arc[nbNodes]; // Création de la liste qui contiendra les nodes du chemin final trouvé Arc[] predecessorArcs = new Arc[nbNodes];
         //Node nodeorigin =data.getOrigin();
         
         
@@ -164,7 +164,18 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 
             // Reverse the path...
             Collections.reverse(arcs);
+            
+            int i = 0;
+            
+            while(i < arcs.size()) {
+            	
+            	i++;
+            
+            }
+            
+            System.out.println("Arc: " + i);
 			
+            
 
 			// Create the final solution.
 			solution = new ShortestPathSolution(data, Status.OPTIMAL, new Path(graph, arcs));
