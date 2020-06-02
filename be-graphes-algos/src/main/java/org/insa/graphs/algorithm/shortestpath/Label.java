@@ -1,15 +1,16 @@
 package org.insa.graphs.algorithm.shortestpath;
 import org.insa.graphs.model.Node;
+import org.insa.graphs.model.Arc;
 
 public class Label implements Comparable<Label>{
 	
 	private boolean marked;
     private Node node;
     private double cost;
-    private Node father;
+    private Arc father;
     
 
-    public Label(boolean marked, Node node, double cost, Node father) {
+    public Label(boolean marked, Node node, double cost, Arc father) {
     	this.marked = marked;
     	this.node = node;
         this.cost = cost;
@@ -43,11 +44,11 @@ public class Label implements Comparable<Label>{
     }
     
 
-    public Node getFather() {
+    public Arc getFather() {
         return father;
     }
     
-    public void setFather(Node father) {
+    public void setFather(Arc father) {
     	this.father = father ;
     }
 

@@ -94,7 +94,10 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         	costxmin = xmin.getCost();
         	
         	for(Arc y : xmin.getNode().getSuccessors()) {
-        		
+        															//La bonne méthode c'est de repartir du label de ton noeud de destination, qui stocke l'arc 
+        														    //qui le relie vers son père (d'ailleur, petite modification à faire également ici, pour 
+        															//stocker le père d'un noeud, on stocke plutot l'arc, ça facilite la vie justement 
+        															//à cette étape pour recréer le chemin)
         		if(data.isAllowed(y)) {
         			
         			int xsuiv = y.getDestination().getId();
@@ -105,20 +108,22 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         				
         				if(costy> costxmin + data.getCost(y)) {
         					
-        					labelList[xsuiv].setCost(costxmin + data.getCost(y));
         					
-        					labelList[xsuiv].setFather(xmin.getNode());
         					
-        					if(labelList[xsuiv].getMarked() == true){
+        					if(labelList[xsuiv].getFather() != null){
         						
         	                       tas.remove(labelList[xsuiv]);
+        	                       labelList[xsuiv].setCost(costxmin + data.getCost(y));
+               					   labelList[xsuiv].setFather(y);
         	                       tas.insert(labelList[xsuiv]);
         	                    } 
         					
         					else {
-        							
-        							tas.insert(labelList[xsuiv]);
         							notifyNodeReached(y.getDestination());
+        							labelList[xsuiv].setCost(costxmin + data.getCost(y));
+                  					labelList[xsuiv].setFather(y);
+                  					tas.insert(labelList[xsuiv]);
+        							
         	                    }	
         					
         				}
@@ -134,23 +139,17 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         	
         	// Condition d'arrêt de l'algorithme
         	
-        //	if (xmin.getNode().compareTo(nodedest)==0) //L'algorithme est stoppé si le dernier node visité est égale à la destination.
-        //	{
+        if (xmin.getNode().compareTo(nodedest)==0) //L'algorithme est stoppé si le dernier node visité est égale à la destination.
+        {
         		
-        //		break;
-        //	}
+        	break;
+        }
         	
         	
         	
         }
         
-        if(nodesFinal[data.getDestination().getId()]== null) {
-        	
-        	solution = new ShortestPathSolution(data, Status.INFEASIBLE);
-        }
-        
-        else {
-
+        if(labelList[nodedest.getId()].getFather() != null) {		//Si mon label qui représente mon noeud de destination à un père, alors j'ai trouvé une solution, sinon c'est infeasable"
 			notifyDestinationReached(data.getDestination());
 			
 	        // Représentation du chemin
@@ -168,6 +167,12 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 
 			// Create the final solution.
 			solution = new ShortestPathSolution(data, Status.OPTIMAL, new Path(graph, arcs));
+        	
+        }
+        
+        else {
+
+        	solution = new ShortestPathSolution(data, Status.INFEASIBLE);
 		}
         
 
