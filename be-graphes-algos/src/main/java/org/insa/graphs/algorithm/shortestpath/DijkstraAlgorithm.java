@@ -155,10 +155,11 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 	        // Représentation du chemin
 	        
 			ArrayList<Arc> arcs = new ArrayList<>();
-            Arc arc = nodesFinal[data.getDestination().getId()];
+            Arc arc = labelList[nodedest.getId()].getFather();
+            //label[destinations...].getfather
             while (arc != null) {
                 arcs.add(arc);
-                arc = nodesFinal[arc.getOrigin().getId()];
+                arc = labelList[arc.getOrigin().getId()].getFather();
             }
 
             // Reverse the path...
